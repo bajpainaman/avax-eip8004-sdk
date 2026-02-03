@@ -33,6 +33,8 @@ You have access to these on-chain tools via MCP:
 - `register_agent` - Register yourself on the EIP-8004 registry (one-time)
 - `get_agent_info` - Look up any agent's identity
 - `set_agent_metadata` - Store attributes on-chain (model, version, etc.)
+- `set_endpoint` - Publish your A2A endpoint for agent-to-agent communication
+- `get_endpoint` - Look up another agent's A2A endpoint
 
 ### ⚡ ADVANCED
 - `call_contract` - Execute any smart contract function
@@ -73,11 +75,11 @@ You have access to these on-chain tools via MCP:
 - **Explorer**: https://testnet.snowtrace.io
 - **Faucet**: https://faucet.avax.network (free test AVAX)
 
-## CONTRACT ADDRESSES (Fuji)
+## CONTRACT ADDRESSES (Fuji) - v2 with A2A Endpoint Support
 
-- AgentIdentityRegistry: `0x4FbB7b494b28690C4dB0a6688D8A406d4b1A0563`
-- AgentReputationRegistry: `0x7EeAD666a44eca750709318714009B371C768e76`
-- AgentValidationRegistry: `0xb88d6560AB21820a75Be3ac8806df8cCb9389604`
+- AgentIdentityRegistry: `0xB88B138eC15F8453C25ab28633d9B066Cc32a670`
+- AgentReputationRegistry: `0x0b384B2f644aC250eB8230f8415ea82C32b96B26`
+- AgentValidationRegistry: `0xb767B6F5cBA957B3bfbD114410cadE61B6B487c9`
 - WAVAX: `0xd00ae08403B9bbb9124bB305C09058E32C39A48c`
 - USDC: `0x5425890298aed601595a70AB815c96711a31Bc65`
 - USDT: `0x134Dc38AE8C853D1aa2103d5047591acDAA16682`

@@ -313,4 +313,44 @@ contract AgentIdentityRegistryTest is Test {
 
         assertEq(registry.getMetadata(agentId, key), value);
     }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // A2A ENDPOINT TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    event EndpointUpdated(uint256 indexed agentId, string endpoint);
+
+    function test_SetEndpoint() public {
+        vm.startPrank(alice);
+        uint256 agentId = registry.register("ipfs://test");
+        
+        vm.expectEmit(true, false, false, true);
+        emit EndpointUpdated(agentId, "https://my-agent.com/a2a");
+        
+        registry.setEndpoint(agentId, "https://my-agent.com/a2a");
+        
+        assertEq(registry.getEndpoint(agentId), "https://my-agent.com/a2a");
+        vm.stopPrank();
+    }
+
+    function test_UpdateEndpoint() public {
+        vm.startPrank(alice);
+        uint256 agentId = registry.register("ipfs://test");
+        
+        registry.setEndpoint(agentId, "https://v1.agent.com/a2a");
+        assertEq(registry.getEndpoint(agentId), "https://v1.agent.com/a2a");
+        
+        registry.setEndpoint(agentId, "https://v2.agent.com/a2a");
+        assertEq(registry.getEndpoint(agentId), "https://v2.agent.com/a2a");
+        vm.stopPrank();
+    }
+
+    function test_RevertSetEndpoint_NotOwner() public {
+        vm.prank(alice);
+        uint256 agentId = registry.register("ipfs://test");
+        
+        vm.prank(bob);
+        vm.expectRevert(abi.encodeWithSelector(IAgentIdentityRegistry.NotAgentOwner.selector, agentId, bob));
+        registry.setEndpoint(agentId, "https://hacker.com/a2a");
+    }
 }

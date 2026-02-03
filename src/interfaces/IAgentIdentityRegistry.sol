@@ -16,6 +16,7 @@ interface IAgentIdentityRegistry {
     event MetadataUpdated(uint256 indexed agentId, string key, bytes value);
     event AgentWalletSet(uint256 indexed agentId, address wallet);
     event AgentWalletUnset(uint256 indexed agentId);
+    event EndpointUpdated(uint256 indexed agentId, string endpoint);
 
     // ═══════════════════════════════════════════════════════════════════════════
     // ERRORS
@@ -114,4 +115,19 @@ interface IAgentIdentityRegistry {
     /// @param wallet The wallet address to lookup
     /// @return The agent ID (0 if no agent linked)
     function getAgentByWallet(address wallet) external view returns (uint256);
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // A2A ENDPOINT (Agent-to-Agent Discovery)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// @notice Set the A2A communication endpoint for an agent
+    /// @dev This is where other agents can reach this agent (URL, DID, etc.)
+    /// @param agentId The agent to update
+    /// @param endpoint The A2A endpoint URL (e.g., "https://agent.example.com/a2a")
+    function setEndpoint(uint256 agentId, string calldata endpoint) external;
+
+    /// @notice Get the A2A endpoint for an agent
+    /// @param agentId The agent to query
+    /// @return The A2A endpoint URL (empty string if not set)
+    function getEndpoint(uint256 agentId) external view returns (string memory);
 }

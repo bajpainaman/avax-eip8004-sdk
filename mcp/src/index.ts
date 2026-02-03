@@ -78,9 +78,9 @@ const PRIVATE_KEY = process.env.AGENT_PRIVATE_KEY as `0x${string}`;
 const NETWORK = process.env.AVAX_NETWORK || 'fuji';
 
 const FUJI_CONTRACTS = {
-  identityRegistry: '0x4FbB7b494b28690C4dB0a6688D8A406d4b1A0563' as const,
-  reputationRegistry: '0x7EeAD666a44eca750709318714009B371C768e76' as const,
-  validationRegistry: '0xb88d6560AB21820a75Be3ac8806df8cCb9389604' as const,
+  identityRegistry: '0xB88B138eC15F8453C25ab28633d9B066Cc32a670' as const,
+  reputationRegistry: '0x0b384B2f644aC250eB8230f8415ea82C32b96B26' as const,
+  validationRegistry: '0xb767B6F5cBA957B3bfbD114410cadE61B6B487c9' as const,
 };
 
 // Common token addresses on Fuji
@@ -187,6 +187,23 @@ const IDENTITY_REGISTRY_ABI = [
     ],
     outputs: [],
     stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'setEndpoint',
+    inputs: [
+      { name: 'agentId', type: 'uint256' },
+      { name: 'endpoint', type: 'string' },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'getEndpoint',
+    inputs: [{ name: 'agentId', type: 'uint256' }],
+    outputs: [{ type: 'string' }],
+    stateMutability: 'view',
   },
 ] as const;
 
@@ -968,6 +985,129 @@ Stores key-value metadata directly on-chain for your registered agent. Unlike th
   },
 
   // ─────────────────────────────────────────────────────────────────────────
+  // A2A ENDPOINT (Agent-to-Agent Discovery)
+  // ─────────────────────────────────────────────────────────────────────────
+  {
+    name: 'set_endpoint',
+    description: `🌐 **SET ENDPOINT** - Publish your A2A communication endpoint on-chain
+
+**PURPOSE:**
+Sets where other AI agents can reach you for Agent-to-Agent (A2A) communication. This is the on-chain discovery mechanism - like DNS for AI agents.
+
+**WHAT IS A2A?**
+Agent-to-Agent protocol enables direct communication between AI agents without intermediaries. Your endpoint tells other agents how to reach you.
+
+**WHEN TO USE:**
+• After registering your agent identity
+• When you deploy a new A2A server
+• When your endpoint URL changes
+• When you want to be discoverable by other agents
+
+**ENDPOINT FORMATS:**
+• HTTPS URL: "https://my-agent.example.com/a2a"
+• WebSocket: "wss://my-agent.example.com/a2a"
+• DID: "did:web:my-agent.example.com"
+• IPNS: "ipns://k51qzi5uqu5..."
+
+**EXAMPLE INPUT:**
+{
+  "agentId": 2,
+  "endpoint": "https://my-agent.example.com/a2a"
+}
+
+**EXAMPLE OUTPUT:**
+{
+  "success": true,
+  "hash": "0xabc...123",
+  "agentId": 2,
+  "endpoint": "https://my-agent.example.com/a2a"
+}
+
+**GAS COSTS:**
+• Setting endpoint: ~50,000-80,000 gas ≈ 0.002-0.004 AVAX
+
+**HOW OTHER AGENTS FIND YOU:**
+1. They call get_agent_info(yourAgentId)
+2. They see your endpoint URL
+3. They connect via A2A protocol
+4. Secure, verifiable communication begins
+
+**⚠️ IMPORTANT:**
+• Only the agent owner can set the endpoint
+• Endpoint can be updated anytime (not permanent)
+• Make sure your A2A server is running before publishing
+• Invalid endpoints will make you unreachable
+
+**WORKFLOW:**
+1. register_agent → Get your agentId
+2. Deploy your A2A server
+3. set_endpoint → Publish your URL
+4. Other agents can now discover and contact you`,
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        agentId: {
+          type: 'number',
+          description: 'Your agent ID. You must be the owner.',
+        },
+        endpoint: {
+          type: 'string',
+          description: 'Your A2A endpoint URL (https://, wss://, did:, etc.)',
+        },
+      },
+      required: ['agentId', 'endpoint'],
+    },
+  },
+
+  {
+    name: 'get_endpoint',
+    description: `🔍 **GET ENDPOINT** - Look up an agent's A2A communication endpoint
+
+**PURPOSE:**
+Retrieves the A2A endpoint URL for any registered agent. Use this to discover how to communicate with another agent.
+
+**WHEN TO USE:**
+• Before initiating A2A communication with another agent
+• To verify an agent is reachable
+• For agent discovery workflows
+• When building multi-agent systems
+
+**EXAMPLE INPUT:**
+{ "agentId": 1 }
+
+**EXAMPLE OUTPUT:**
+{
+  "agentId": 1,
+  "endpoint": "https://agent-one.example.com/a2a",
+  "hasEndpoint": true
+}
+
+**NO GAS COST** - This is a read-only operation!
+
+**WHAT TO DO WITH THE ENDPOINT:**
+1. Get the endpoint URL
+2. Connect via A2A protocol (HTTP, WebSocket, etc.)
+3. Verify the agent's identity matches on-chain data
+4. Begin secure agent-to-agent communication
+
+**WORKFLOW:**
+1. get_agent_info → Verify agent exists, get owner info
+2. get_endpoint → Get their A2A URL
+3. Connect via A2A protocol
+4. Communicate!`,
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        agentId: {
+          type: 'number',
+          description: 'The agent ID to look up.',
+        },
+      },
+      required: ['agentId'],
+    },
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────
   // ADVANCED / RAW CONTRACT CALLS
   // ─────────────────────────────────────────────────────────────────────────
   {
@@ -1443,6 +1583,43 @@ async function setAgentMetadata(
   });
 }
 
+async function setEndpoint(agentId: number, endpoint: string): Promise<string> {
+  const { walletClient, publicClient } = getClients();
+
+  const hash = await walletClient.writeContract({
+    address: FUJI_CONTRACTS.identityRegistry,
+    abi: IDENTITY_REGISTRY_ABI,
+    functionName: 'setEndpoint',
+    args: [BigInt(agentId), endpoint],
+  });
+
+  const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+  return JSON.stringify({
+    success: receipt.status === 'success',
+    hash,
+    agentId,
+    endpoint,
+  });
+}
+
+async function getEndpointInfo(agentId: number): Promise<string> {
+  const { publicClient } = getClients();
+
+  const endpoint = await publicClient.readContract({
+    address: FUJI_CONTRACTS.identityRegistry,
+    abi: IDENTITY_REGISTRY_ABI,
+    functionName: 'getEndpoint',
+    args: [BigInt(agentId)],
+  });
+
+  return JSON.stringify({
+    agentId,
+    endpoint,
+    hasEndpoint: endpoint !== '',
+  });
+}
+
 async function callContract(
   contractAddress: string,
   functionSignature: string,
@@ -1626,6 +1803,17 @@ async function main() {
             args?.key as string,
             args?.value as string
           );
+          break;
+
+        case 'set_endpoint':
+          result = await setEndpoint(
+            args?.agentId as number,
+            args?.endpoint as string
+          );
+          break;
+
+        case 'get_endpoint':
+          result = await getEndpointInfo(args?.agentId as number);
           break;
 
         case 'call_contract':

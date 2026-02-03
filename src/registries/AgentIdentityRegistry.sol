@@ -46,6 +46,9 @@ contract AgentIdentityRegistry is
     /// @notice Reverse lookup: wallet => agentId
     mapping(address wallet => uint256 agentId) private _walletToAgent;
 
+    /// @notice A2A endpoint: agentId => endpoint URL (for agent-to-agent communication)
+    mapping(uint256 agentId => string endpoint) private _endpoints;
+
     // ═══════════════════════════════════════════════════════════════════════════
     // CONSTRUCTOR
     // ═══════════════════════════════════════════════════════════════════════════
@@ -196,6 +199,27 @@ contract AgentIdentityRegistry is
         delete _agentWallets[agentId];
 
         emit AgentWalletUnset(agentId);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // A2A ENDPOINT (Agent-to-Agent Discovery)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// @inheritdoc IAgentIdentityRegistry
+    function setEndpoint(uint256 agentId, string calldata endpoint) external {
+        _requireOwned(agentId);
+        if (ownerOf(agentId) != msg.sender) {
+            revert NotAgentOwner(agentId, msg.sender);
+        }
+
+        _endpoints[agentId] = endpoint;
+        emit EndpointUpdated(agentId, endpoint);
+    }
+
+    /// @inheritdoc IAgentIdentityRegistry
+    function getEndpoint(uint256 agentId) external view returns (string memory) {
+        _requireOwned(agentId);
+        return _endpoints[agentId];
     }
 
     // ═══════════════════════════════════════════════════════════════════════════

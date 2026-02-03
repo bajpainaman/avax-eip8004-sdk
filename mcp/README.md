@@ -66,6 +66,8 @@ Copy the system prompt from [AGENT_PROMPT.md](./AGENT_PROMPT.md) to give your ag
 | `register_agent` | Create EIP-8004 identity | ~0.005 AVAX |
 | `get_agent_info` | Look up any agent | Free |
 | `set_agent_metadata` | Store on-chain attributes | ~0.003 AVAX |
+| `set_endpoint` | Set A2A communication endpoint | ~0.003 AVAX |
+| `get_endpoint` | Look up agent's A2A endpoint | Free |
 | `call_contract` | Raw contract calls | Varies |
 
 ## Supported Tokens (Fuji)
@@ -76,13 +78,13 @@ Copy the system prompt from [AGENT_PROMPT.md](./AGENT_PROMPT.md) to give your ag
 | USDC | `0x5425890298aed601595a70AB815c96711a31Bc65` |
 | USDT | `0x134Dc38AE8C853D1aa2103d5047591acDAA16682` |
 
-## EIP-8004 Contracts (Fuji)
+## EIP-8004 Contracts (Fuji) - v2 with A2A Endpoint Support
 
 | Contract | Address |
 |----------|---------|
-| AgentIdentityRegistry | `0x4FbB7b494b28690C4dB0a6688D8A406d4b1A0563` |
-| AgentReputationRegistry | `0x7EeAD666a44eca750709318714009B371C768e76` |
-| AgentValidationRegistry | `0xb88d6560AB21820a75Be3ac8806df8cCb9389604` |
+| AgentIdentityRegistry | `0xB88B138eC15F8453C25ab28633d9B066Cc32a670` |
+| AgentReputationRegistry | `0x0b384B2f644aC250eB8230f8415ea82C32b96B26` |
+| AgentValidationRegistry | `0xb767B6F5cBA957B3bfbD114410cadE61B6B487c9` |
 
 ## Example Workflows
 

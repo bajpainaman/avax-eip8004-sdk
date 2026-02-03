@@ -74,15 +74,15 @@ Avalanche's L1 architecture enables something better:
 
 ---
 
-## Deployed Contracts (Fuji Testnet)
+## Deployed Contracts (Fuji Testnet) - v2 with A2A Endpoint Support
 
 | Contract | Address |
 |----------|---------|
-| **AgentIdentityRegistry** | `0x4FbB7b494b28690C4dB0a6688D8A406d4b1A0563` |
-| **AgentReputationRegistry** | `0x7EeAD666a44eca750709318714009B371C768e76` |
-| **AgentValidationRegistry** | `0xb88d6560AB21820a75Be3ac8806df8cCb9389604` |
-| **CrossChainAgentVerifier** | `0xEd8233F1072685C938De42FFDff9cfd979cec28F` |
-| **AgentRegistryResponder** | `0xc6bbb778f9d187200f291EA3CCccAd01a662d9d8` |
+| **AgentIdentityRegistry** | `0xB88B138eC15F8453C25ab28633d9B066Cc32a670` |
+| **AgentReputationRegistry** | `0x0b384B2f644aC250eB8230f8415ea82C32b96B26` |
+| **AgentValidationRegistry** | `0xb767B6F5cBA957B3bfbD114410cadE61B6B487c9` |
+| **CrossChainAgentVerifier** | `0xc65E8Dc8AE43F08CAA9d75c1c053347973909Fbe` |
+| **AgentRegistryResponder** | `0x0d11660D736d360D5f1302FDF29473648e9014f5` |
 
 **Chain ID:** 43113 (Avalanche Fuji)
 **Teleporter:** `0x253b2784c75e510dD0fF1da844684a1aC0aa5fcf`
@@ -239,10 +239,10 @@ const walletClient = createWalletClient({
 
 const sdk = new AgentSDK({
   chain: createFujiConfig({
-    identityRegistry: '0x4FbB7b494b28690C4dB0a6688D8A406d4b1A0563',
-    reputationRegistry: '0x7EeAD666a44eca750709318714009B371C768e76',
-    validationRegistry: '0xb88d6560AB21820a75Be3ac8806df8cCb9389604',
-    crossChainVerifier: '0xEd8233F1072685C938De42FFDff9cfd979cec28F',
+    identityRegistry: '0xB88B138eC15F8453C25ab28633d9B066Cc32a670',
+    reputationRegistry: '0x0b384B2f644aC250eB8230f8415ea82C32b96B26',
+    validationRegistry: '0xb767B6F5cBA957B3bfbD114410cadE61B6B487c9',
+    crossChainVerifier: '0xc65E8Dc8AE43F08CAA9d75c1c053347973909Fbe',
   }),
 }, publicClient, walletClient);
 
@@ -275,6 +275,7 @@ await sdk.validation.validationRequest({
 - EIP-712 signed wallet linking
 - On-chain metadata storage
 - Agent URI for off-chain data
+- **A2A Endpoint** for agent-to-agent communication discovery
 
 ### AgentReputationRegistry
 - Signed fixed-point feedback values (int128 + decimals)
