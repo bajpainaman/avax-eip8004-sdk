@@ -1,6 +1,84 @@
-# Avalanche-Native EIP-8004: Elegant Architecture
+# Avalanche-Native EIP-8004: Trustless AI Agents
+
+## TL;DR
+
+AI agents need a way to prove they're trustworthy without a central authority. EIP-8004 creates three on-chain registries (identity, reputation, validation) that let agents build verifiable track records. Our Avalanche implementation lets each L1 run its own registry while using ICM to verify agents across chains—no syncing, no caching, just ask the source.
+
+---
+
+## ELI5 (Explain Like I'm 5)
+
+Imagine you want to hire a robot helper, but there are millions of robots and you don't know which ones are good.
+
+**The problem**: How do you know if a robot is trustworthy? Right now, you'd have to trust a company (like "RobotStore") to tell you. But what if RobotStore lies? Or goes away?
+
+**The solution**: What if every robot had a public report card that anyone could read, and that report card was stored on a blockchain so nobody could fake it or delete it?
+
+That's EIP-8004:
+- **Identity Registry** = Robot's ID card (proves who they are)
+- **Reputation Registry** = Robot's report card (what people said about them)
+- **Validation Registry** = Robot's test scores (verified by trusted testers)
+
+**The Avalanche twist**: Avalanche has many different "neighborhoods" (L1s). Instead of forcing all robots to register in one place, each neighborhood keeps its own list. If someone in Neighborhood A wants to check a robot from Neighborhood B, they just ask Neighborhood B directly using Avalanche's built-in phone system (ICM).
+
+---
+
+## The Big Picture: Why This Matters
+
+### The Problem We're Solving
+
+AI agents are becoming economic actors. They:
+- Execute trades
+- Manage funds
+- Perform services for payment
+- Interact with other agents
+
+But there's no trustless way to answer: **"Should I trust this agent with my money?"**
+
+Current solutions require trusting:
+- Centralized registries (single point of failure)
+- Platform reputation systems (walled gardens)
+- Self-reported credentials (easily faked)
+
+### What EIP-8004 Provides
+
+A **permissionless, on-chain trust layer** for AI agents:
+
+| Registry | What It Stores | Who Writes |
+|----------|---------------|------------|
+| **Identity** | Agent ID (NFT), metadata URI, wallet address | Agent owner |
+| **Reputation** | Feedback scores, tags, reviewer addresses | Service users |
+| **Validation** | Test results, validator attestations | Third-party validators |
+
+Anyone can:
+- Register an agent (permissionless)
+- Leave feedback (if they interacted with the agent)
+- Query any agent's full history (transparent)
+
+Nobody can:
+- Delete negative feedback
+- Fake their identity
+- Manipulate their reputation without real interactions
+
+### Why Avalanche?
+
+Ethereum's EIP-8004 works, but it's monolithic—one registry for everyone on one chain.
+
+Avalanche's L1 architecture enables something better:
+
+1. **Sovereignty**: A gaming L1 might require agents to stake tokens. A DeFi L1 might require KYC validators. Each L1 sets its own rules.
+
+2. **Scalability**: Agents register where they operate. No global state bloat.
+
+3. **Cross-chain trust**: ICM provides cryptographically verified cross-chain queries. When L1-A asks "is this agent legit on C-Chain?", the answer is signed by P-Chain validators—not some oracle.
+
+---
 
 ## Design Philosophy
+
+**Avalanche's actual superpower**: L1 sovereignty + ICM verification when you need cross-chain trust.
+
+**Not**: Using every feature because it exists.
 
 **Avalanche's actual superpower**: L1 sovereignty + ICM verification when you need cross-chain trust.
 
