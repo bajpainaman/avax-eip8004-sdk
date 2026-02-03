@@ -1,0 +1,30 @@
+{
+  "name": "@avax/agent-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for AI agents to operate on Avalanche with EIP-8004 identity",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "agent-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "viem": "^2.21.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tsup": "^8.0.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
