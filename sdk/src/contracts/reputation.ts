@@ -290,6 +290,9 @@ export class ReputationRegistryClient {
     if (!this.walletClient) {
       throw new Error('WalletClient required for write operations');
     }
+    if (!this.walletClient.account) {
+      throw new Error('WalletClient must have an account for signing');
+    }
     return this.walletClient;
   }
 
@@ -298,11 +301,10 @@ export class ReputationRegistryClient {
    */
   async giveFeedback(params: GiveFeedbackParams): Promise<Hash> {
     const wallet = this.requireWallet();
-    const [account] = await wallet.getAddresses();
 
     return wallet.writeContract({
       chain: wallet.chain,
-      account,
+      account: wallet.account!,
       address: this.address,
       abi: AgentReputationRegistryABI,
       functionName: 'giveFeedback',
@@ -324,11 +326,10 @@ export class ReputationRegistryClient {
    */
   async revokeFeedback(agentId: bigint, index: bigint): Promise<Hash> {
     const wallet = this.requireWallet();
-    const [account] = await wallet.getAddresses();
 
     return wallet.writeContract({
       chain: wallet.chain,
-      account,
+      account: wallet.account!,
       address: this.address,
       abi: AgentReputationRegistryABI,
       functionName: 'revokeFeedback',
@@ -347,11 +348,10 @@ export class ReputationRegistryClient {
     responseHash: Hash
   ): Promise<Hash> {
     const wallet = this.requireWallet();
-    const [account] = await wallet.getAddresses();
 
     return wallet.writeContract({
       chain: wallet.chain,
-      account,
+      account: wallet.account!,
       address: this.address,
       abi: AgentReputationRegistryABI,
       functionName: 'appendResponse',

@@ -248,6 +248,9 @@ export class CrossChainVerifierClient {
     if (!this.walletClient) {
       throw new Error('WalletClient required for write operations');
     }
+    if (!this.walletClient.account) {
+      throw new Error('WalletClient must have an account for signing');
+    }
     return this.walletClient;
   }
 
@@ -257,11 +260,10 @@ export class CrossChainVerifierClient {
    */
   async verifyAgent(params: VerifyAgentParams): Promise<Hash> {
     const wallet = this.requireWallet();
-    const [account] = await wallet.getAddresses();
 
     return wallet.writeContract({
       chain: wallet.chain,
-      account,
+      account: wallet.account!,
       address: this.address,
       abi: CrossChainAgentVerifierABI,
       functionName: 'verifyAgent',
@@ -275,11 +277,10 @@ export class CrossChainVerifierClient {
    */
   async queryReputation(params: QueryReputationParams): Promise<Hash> {
     const wallet = this.requireWallet();
-    const [account] = await wallet.getAddresses();
 
     return wallet.writeContract({
       chain: wallet.chain,
-      account,
+      account: wallet.account!,
       address: this.address,
       abi: CrossChainAgentVerifierABI,
       functionName: 'queryReputation',
@@ -298,11 +299,10 @@ export class CrossChainVerifierClient {
    */
   async configureRegistry(chainId: Hash, registry: Address): Promise<Hash> {
     const wallet = this.requireWallet();
-    const [account] = await wallet.getAddresses();
 
     return wallet.writeContract({
       chain: wallet.chain,
-      account,
+      account: wallet.account!,
       address: this.address,
       abi: CrossChainAgentVerifierABI,
       functionName: 'configureRegistry',
@@ -315,11 +315,10 @@ export class CrossChainVerifierClient {
    */
   async setRequiredGasLimit(gasLimit: bigint): Promise<Hash> {
     const wallet = this.requireWallet();
-    const [account] = await wallet.getAddresses();
 
     return wallet.writeContract({
       chain: wallet.chain,
-      account,
+      account: wallet.account!,
       address: this.address,
       abi: CrossChainAgentVerifierABI,
       functionName: 'setRequiredGasLimit',

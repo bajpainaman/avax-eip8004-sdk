@@ -318,6 +318,9 @@ export class IdentityRegistryClient {
     if (!this.walletClient) {
       throw new Error('WalletClient required for write operations');
     }
+    if (!this.walletClient.account) {
+      throw new Error('WalletClient must have an account for signing');
+    }
     return this.walletClient;
   }
 
@@ -326,12 +329,11 @@ export class IdentityRegistryClient {
    */
   async register(params?: RegisterAgentParams): Promise<Hash> {
     const wallet = this.requireWallet();
-    const [account] = await wallet.getAddresses();
 
     if (params?.metadata && params.metadata.length > 0) {
       return wallet.writeContract({
         chain: wallet.chain,
-        account,
+        account: wallet.account!,
         address: this.address,
         abi: AgentIdentityRegistryABI,
         functionName: 'register',
@@ -340,7 +342,7 @@ export class IdentityRegistryClient {
     } else if (params?.agentURI) {
       return wallet.writeContract({
         chain: wallet.chain,
-        account,
+        account: wallet.account!,
         address: this.address,
         abi: AgentIdentityRegistryABI,
         functionName: 'register',
@@ -349,7 +351,7 @@ export class IdentityRegistryClient {
     } else {
       return wallet.writeContract({
         chain: wallet.chain,
-        account,
+        account: wallet.account!,
         address: this.address,
         abi: AgentIdentityRegistryABI,
         functionName: 'register',
@@ -363,11 +365,10 @@ export class IdentityRegistryClient {
    */
   async setAgentURI(agentId: bigint, agentURI: string): Promise<Hash> {
     const wallet = this.requireWallet();
-    const [account] = await wallet.getAddresses();
 
     return wallet.writeContract({
       chain: wallet.chain,
-      account,
+      account: wallet.account!,
       address: this.address,
       abi: AgentIdentityRegistryABI,
       functionName: 'setAgentURI',
@@ -384,11 +385,10 @@ export class IdentityRegistryClient {
     value: Hex
   ): Promise<Hash> {
     const wallet = this.requireWallet();
-    const [account] = await wallet.getAddresses();
 
     return wallet.writeContract({
       chain: wallet.chain,
-      account,
+      account: wallet.account!,
       address: this.address,
       abi: AgentIdentityRegistryABI,
       functionName: 'setMetadata',
@@ -401,11 +401,10 @@ export class IdentityRegistryClient {
    */
   async setAgentWallet(params: WalletLinkParams): Promise<Hash> {
     const wallet = this.requireWallet();
-    const [account] = await wallet.getAddresses();
 
     return wallet.writeContract({
       chain: wallet.chain,
-      account,
+      account: wallet.account!,
       address: this.address,
       abi: AgentIdentityRegistryABI,
       functionName: 'setAgentWallet',
@@ -418,11 +417,10 @@ export class IdentityRegistryClient {
    */
   async unsetAgentWallet(agentId: bigint): Promise<Hash> {
     const wallet = this.requireWallet();
-    const [account] = await wallet.getAddresses();
 
     return wallet.writeContract({
       chain: wallet.chain,
-      account,
+      account: wallet.account!,
       address: this.address,
       abi: AgentIdentityRegistryABI,
       functionName: 'unsetAgentWallet',
