@@ -1,0 +1,51 @@
+{
+  "name": "@avax/eip8004-sdk",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for EIP-8004 Trustless AI Agents on Avalanche",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "avalanche",
+    "eip-8004",
+    "ai-agents",
+    "icm",
+    "teleporter",
+    "blockchain",
+    "ethereum",
+    "viem",
+    "wagmi"
+  ],
+  "author": "Naman Bajpai",
+  "license": "MIT",
+  "peerDependencies": {
+    "viem": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "eslint": "^8.55.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "viem": "^2.21.0",
+    "vitest": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/avax-eip8004-sdk"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
