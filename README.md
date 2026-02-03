@@ -231,19 +231,6 @@ Until then: **simple wins**.
 
 ---
 
-## Comparison
-
-| Aspect | Over-Engineered V1 | Elegant V2 |
-|--------|-------------------|------------|
-| Contracts | 6+ | 4 (3 standard + 1 verifier) |
-| New concepts | Sync, caches, remotes, bridges | ICM query |
-| Failure modes | Stale caches, sync lag, C-Chain congestion | None new |
-| L1 sovereignty | Compromised | Preserved |
-| Time to ship | 13-18 weeks | 2-3 weeks |
-| Lines of new code | ~2000+ | ~200 |
-
----
-
 ## The Avalanche Value Proposition
 
 **For agents**: Register once on your home chain. Other chains can verify you via ICM.
